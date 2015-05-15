@@ -1,17 +1,29 @@
 module.exports = function (grunt) {
+  grunt.task.loadNpmTasks('grunt-contrib-copy');
   grunt.task.loadNpmTasks('assemble');
   grunt.initConfig({
     assemble:{
-      site:{ //targe name
+      site:{
         options:{
-          data:['config.yml'] //data files
+          data:['config.yml'],
+          layout: 'src/layouts/default.hbs',
+          partials: 'src/partials/**/*.hbs',
+          assets: 'dest/assets'
         },
         files:[
-          {src: 'src/index.hbs', dest: 'index.html'},
-          {src: 'src/pages/1.hbs', dest: 'dest/1.html'}
+          {expand: true, cwd: 'src/pages/', src: '**/*.hbs', dest: 'dest'},
+          {src: 'src/index.hbs', dest: 'index.html'}
         ]
       }
+    },
+  
+    copy:{
+      assets: {
+        expand: true, cwd: 'src/assets', src: '**', dest: 'dest/assets'
+      }
     }
+
   });
-  grunt.registerTask('default', ['assemble']);
+
+  grunt.registerTask('default', ['assemble', 'copy']);
 };
